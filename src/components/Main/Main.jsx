@@ -5,10 +5,17 @@ import shortid from 'shortid';
 import useDebounce from '../customHook/useDebounce';
 import { fetchRepos } from '../../services/api';
 
-const Main = ({ searchInput, setSearchInput }) => {
+const Main = ({
+  searchInput,
+  setSearchInput,
+  results,
+  setResults,
+  historyItems,
+  setHistoryItem,
+}) => {
   //   const [searchInput, setSearchInput] = useState('');
-  const [historyItems, setHistoryItem] = useState([]);
-  const [results, setResults] = useState([]);
+  //   const [historyItems, setHistoryItem] = useState([]);
+  //   const [results, setResults] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
 
   function handleChange({ target }) {
@@ -20,19 +27,18 @@ const Main = ({ searchInput, setSearchInput }) => {
 
   useEffect(() => {
     const itemHistory = JSON.parse(localStorage.getItem('historyItems'));
-    if (itemHistory.length) {
-      setHistoryItem(itemHistory.slice(0, 5));
-    }
+
+    if (!itemHistory || !itemHistory.length) return;
+
+    setHistoryItem(itemHistory.slice(0, 5));
   }, []);
 
   useEffect(() => {
     if (debouncedSearchTerm) {
-      setHistoryItem(() => {
-        return [
-          { id: shortid.generate(), name: debouncedSearchTerm },
-          ...historyItems,
-        ];
-      });
+      setHistoryItem([
+        { id: shortid.generate(), name: debouncedSearchTerm },
+        ...historyItems,
+      ]);
 
       setIsSearching(true);
 
@@ -83,10 +89,14 @@ const Main = ({ searchInput, setSearchInput }) => {
 
 const mapStateToProps = (state) => ({
   searchInput: state.app.searchInput,
+  results: state.app.results,
+  historyItems: state.app.historyItems,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   setSearchInput: (value) => dispatch(appAtions.setSearchInput(value)),
+  setResults: (value) => dispatch(appAtions.setResults(value)),
+  setHistoryItem: (value) => dispatch(appAtions.setHistoryItem(value)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Main);
