@@ -1,0 +1,39 @@
+.main {
+  margin-top: 30px;
+
+  &__input {
+    color: #000;
+    width: 100%;
+    max-width: 280px;
+    background-color: #fff;
+    border: none;
+    border-radius: 15px;
+    padding-left: 10px;
+    height: 25px;
+    outline: none;
+  }
+
+  &__text,
+  &__text-empty,
+  &__item {
+    color: #f5f5dc;
+  }
+
+  &__text,
+  &__list,
+  &__text-empty {
+    margin-top: 25px;
+  }
+
+  &__list {
+    list-style: none;
+  }
+
+  &__item {
+    margin-bottom: 5px;
+
+    &:last-child {
+      margin-bottom: 0px;
+    }
+  }
+}

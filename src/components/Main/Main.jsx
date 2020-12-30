@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import './Main.scss';
 import { connect } from 'react-redux';
 import * as appActions from '../../redux/actions/appActions';
 import shortid from 'shortid';
@@ -61,28 +62,39 @@ const Main = ({
   }, [historyItems]);
 
   return (
-    <main>
+    <main className="main">
       <div>
-        <input onChange={handleChange} type="text" placeholder="Type to find" />
+        <input
+          className="main__input"
+          onChange={handleChange}
+          type="text"
+          placeholder="Type to find"
+        />
 
         <div>
-          <p>Search history:</p>
+          <p className="main__text">Search history:</p>
           {!historyItems.length ? (
-            <p>You have no history yet</p>
+            <p className="main__text-empty">You have no history yet</p>
           ) : (
-            <ul>
+            <ul className="main__list">
               {historyItems.slice(0, 5).map(({ id, name }) => (
-                <li key={id}>{name}</li>
+                <li className="main__item" key={id}>
+                  {name}
+                </li>
               ))}
             </ul>
           )}
         </div>
       </div>
-      <ul>
+      <ul className="main__list">
         {isSearching ? (
-          <p>loading ...</p>
+          <li>loading ...</li>
         ) : (
-          results.map(({ id, name }) => <li key={id}>{name}</li>)
+          results.map(({ id, name }) => (
+            <li className="main__item" key={id}>
+              {name}
+            </li>
+          ))
         )}
       </ul>
     </main>
