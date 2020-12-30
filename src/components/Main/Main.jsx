@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { connect } from 'react-redux';
+import * as appAtions from '../../redux/actions/appActions';
 import shortid from 'shortid';
 import useDebounce from '../customHook/useDebounce';
 import { fetchRepos } from '../../services/api';
 
-const Main = () => {
-  const [searchInput, setSearchInput] = useState('');
+const Main = ({ searchInput, setSearchInput }) => {
+  //   const [searchInput, setSearchInput] = useState('');
   const [historyItems, setHistoryItem] = useState([]);
   const [results, setResults] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
@@ -79,4 +81,12 @@ const Main = () => {
   );
 };
 
-export default Main;
+const mapStateToProps = (state) => ({
+  searchInput: state.app.searchInput,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  setSearchInput: (value) => dispatch(appAtions.setSearchInput(value)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Main);
