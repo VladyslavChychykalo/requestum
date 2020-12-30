@@ -2,6 +2,7 @@ export const Type = {
   SET_SEARCH_INPUT: 'SET_SEARCH_INPUT',
   SET_RESULTS: 'SET_RESULTS',
   SET_HISTORY_ITEM: 'SET_HISTORY_ITEM',
+  SET_IS_SEARCHING: 'SET_IS_SEARCHING',
 };
 
 export const setSearchInput = (value) => ({
@@ -16,5 +17,10 @@ export const setResults = (value) => ({
 
 export const setHistoryItem = (value) => ({
   type: Type.SET_HISTORY_ITEM,
+  payload: value,
+});
+
+export const setIsSearching = (value) => ({
+  type: Type.SET_IS_SEARCHING,
   payload: value,
 });

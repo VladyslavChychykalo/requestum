@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import * as appAtions from '../../redux/actions/appActions';
+import * as appActions from '../../redux/actions/appActions';
 import shortid from 'shortid';
 import useDebounce from '../customHook/useDebounce';
 import { fetchRepos } from '../../services/api';
@@ -12,11 +12,13 @@ const Main = ({
   setResults,
   historyItems,
   setHistoryItem,
+  isSearching,
+  setIsSearching,
 }) => {
   //   const [searchInput, setSearchInput] = useState('');
   //   const [historyItems, setHistoryItem] = useState([]);
   //   const [results, setResults] = useState([]);
-  const [isSearching, setIsSearching] = useState(false);
+  //   const [isSearching, setIsSearching] = useState(false);
 
   function handleChange({ target }) {
     const { value } = target;
@@ -91,12 +93,14 @@ const mapStateToProps = (state) => ({
   searchInput: state.app.searchInput,
   results: state.app.results,
   historyItems: state.app.historyItems,
+  isSearching: state.app.isSearching,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  setSearchInput: (value) => dispatch(appAtions.setSearchInput(value)),
-  setResults: (value) => dispatch(appAtions.setResults(value)),
-  setHistoryItem: (value) => dispatch(appAtions.setHistoryItem(value)),
+  setSearchInput: (value) => dispatch(appActions.setSearchInput(value)),
+  setResults: (value) => dispatch(appActions.setResults(value)),
+  setHistoryItem: (value) => dispatch(appActions.setHistoryItem(value)),
+  setIsSearching: (value) => dispatch(appActions.setIsSearching(value)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Main);

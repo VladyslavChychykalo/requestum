@@ -28,8 +28,18 @@ const historyItemsReducer = (state = [], action) => {
   }
 };
 
+const isSearchingReducer = (state = null, action) => {
+  switch (action.type) {
+    case Type.SET_IS_SEARCHING:
+      return action.payload;
+    default:
+      return state;
+  }
+};
+
 export default combineReducers({
   searchInput: searchInputReducer,
   results: resultsReducer,
   historyItems: historyItemsReducer,
+  isSearching: isSearchingReducer,
 });
