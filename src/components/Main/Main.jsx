@@ -1,70 +1,82 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import shortid from 'shortid';
+import useDebounce from '../customHook/useDebounce';
+import { fetchRepos } from '../../services/api';
 
-export default class Main extends Component {
-  state = {
-    searchedItems: [],
-    searchedValues: [],
-    searchInput: '',
-  };
+const Main = () => {
+  const [searchInput, setSearchInput] = useState('');
+  const [historyItems, setHistoryItem] = useState([]);
+  const [results, setResults] = useState([]);
+  const [isSearching, setIsSearching] = useState(false);
 
-  handleChange = ({ target }) => {
-    const { name, value } = target;
-    this.setState({ [name]: value });
-  };
+  function handleChange({ target }) {
+    const { value } = target;
+    setSearchInput(value);
+  }
 
-  handleSubmit = (e) => {
-    e.preventDefault();
+  const debouncedSearchTerm = useDebounce(searchInput, 500);
 
-    const { searchedItems, searchedValues, searchInput } = this.state;
+  useEffect(() => {
+    const itemHistory = JSON.parse(localStorage.getItem('historyItems'));
+    if (itemHistory.length) {
+      setHistoryItem(itemHistory.slice(0, 5));
+    }
+  }, []);
 
-    const obj = {
-      id: shortid.generate(),
-      searchInput,
-    };
+  useEffect(() => {
+    if (debouncedSearchTerm) {
+      setHistoryItem(() => {
+        return [
+          { id: shortid.generate(), name: debouncedSearchTerm },
+          ...historyItems,
+        ];
+      });
 
-    this.setState((prevState) => {
-      return {
-        searchedValues: [...prevState.searchedValues, obj],
-      };
-    });
+      setIsSearching(true);
 
-    this.resetInput();
-  };
+      fetchRepos(debouncedSearchTerm).then(({ data }) => {
+        setIsSearching(false);
 
-  resetInput = () => {
-    this.setState({
-      searchInput: '',
-    });
-  };
+        setResults(data.items);
+      });
+    } else {
+      setResults([]);
+    }
+  }, [debouncedSearchTerm]);
 
-  render() {
-    const { searchInput, searchedValues } = this.state;
-    return (
-      <main>
-        <form onSubmit={this.handleSubmit}>
-          <input
-            onChange={this.handleChange}
-            type="text"
-            name="searchInput"
-            value={searchInput}
-            placeholder="Type to find"
-          />
-        </form>
+  useEffect(() => {
+    if (historyItems) {
+      localStorage.setItem('historyItems', JSON.stringify(historyItems));
+    }
+  }, [historyItems]);
+
+  return (
+    <main>
+      <div>
+        <input onChange={handleChange} type="text" placeholder="Type to find" />
 
         <div>
           <p>Search history:</p>
-          {!searchedValues.length ? (
+          {!historyItems.length ? (
             <p>You have no history yet</p>
           ) : (
             <ul>
-              {searchedValues.map(({ id, searchInput }) => (
-                <li key={id}>{searchInput}</li>
+              {historyItems.slice(0, 5).map(({ id, name }) => (
+                <li key={id}>{name}</li>
               ))}
             </ul>
           )}
         </div>
-      </main>
-    );
-  }
-}
+      </div>
+      <ul>
+        {isSearching ? (
+          <p>loading ...</p>
+        ) : (
+          results.map(({ id, name }) => <li key={id}>{name}</li>)
+        )}
+      </ul>
+    </main>
+  );
+};
+
+export default Main;
