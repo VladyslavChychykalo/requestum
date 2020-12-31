@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import './Main.scss';
-import { connect } from 'react-redux';
-import * as appActions from '../../redux/actions/appActions';
-import shortid from 'shortid';
-import useDebounce from '../customHook/useDebounce';
-import { fetchRepos } from '../../services/api';
+import React, { useState, useEffect } from "react";
+import Card from "../Card/Card";
+import "./Main.scss";
+import { connect } from "react-redux";
+import * as appActions from "../../redux/actions/appActions";
+import shortid from "shortid";
+import useDebounce from "../customHook/useDebounce";
+import { fetchRepos } from "../../services/api";
 
 const Main = ({
   searchInput,
@@ -29,7 +30,7 @@ const Main = ({
   const debouncedSearchTerm = useDebounce(searchInput, 500);
 
   useEffect(() => {
-    const itemHistory = JSON.parse(localStorage.getItem('historyItems'));
+    const itemHistory = JSON.parse(localStorage.getItem("historyItems"));
 
     if (!itemHistory || !itemHistory.length) return;
 
@@ -48,6 +49,7 @@ const Main = ({
       fetchRepos(debouncedSearchTerm).then(({ data }) => {
         setIsSearching(false);
 
+        console.log(data.items[0]);
         setResults(data.items);
       });
     } else {
@@ -57,7 +59,7 @@ const Main = ({
 
   useEffect(() => {
     if (historyItems) {
-      localStorage.setItem('historyItems', JSON.stringify(historyItems));
+      localStorage.setItem("historyItems", JSON.stringify(historyItems));
     }
   }, [historyItems]);
 
@@ -90,11 +92,7 @@ const Main = ({
         {isSearching ? (
           <li>loading ...</li>
         ) : (
-          results.map(({ id, name }) => (
-            <li className="main__item" key={id}>
-              {name}
-            </li>
-          ))
+          results.map((result) => <Card key={result.id} result={result} />)
         )}
       </ul>
     </main>

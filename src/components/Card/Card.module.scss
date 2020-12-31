@@ -1,0 +1,26 @@
+.card {
+  padding: 15px;
+  max-width: 30%;
+  background-color: #fff;
+  color: #000;
+  border-radius: 10px;
+  margin-bottom: 20px;
+
+  h4 {
+    margin-bottom: 10px;
+    font-size: 16px;
+  }
+
+  p {
+    margin-bottom: 10px;
+    font-size: 12px;
+
+    &:last-child {
+      margin-bottom: 0px;
+    }
+
+    span {
+      font-weight: bold;
+    }
+  }
+}
