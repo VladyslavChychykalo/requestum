@@ -1,14 +1,5 @@
-import { combineReducers } from 'redux';
-import { Type } from '../actions/appActions';
-
-const searchInputReducer = (state = '', action) => {
-  switch (action.type) {
-    case Type.SET_SEARCH_INPUT:
-      return action.payload;
-    default:
-      return state;
-  }
-};
+import { combineReducers } from "redux";
+import { Type } from "../actions/appActions";
 
 const resultsReducer = (state = [], action) => {
   switch (action.type) {
@@ -28,7 +19,7 @@ const historyItemsReducer = (state = [], action) => {
   }
 };
 
-const isSearchingReducer = (state = null, action) => {
+const isSearchingReducer = (state = false, action) => {
   switch (action.type) {
     case Type.SET_IS_SEARCHING:
       return action.payload;
@@ -38,7 +29,6 @@ const isSearchingReducer = (state = null, action) => {
 };
 
 export default combineReducers({
-  searchInput: searchInputReducer,
   results: resultsReducer,
   historyItems: historyItemsReducer,
   isSearching: isSearchingReducer,

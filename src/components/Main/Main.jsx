@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 import Card from "../Card/Card";
 import "./Main.scss";
 import { connect } from "react-redux";
@@ -113,15 +114,27 @@ const Main = ({
   );
 };
 
+Main.propTypes = {
+  results: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  setResults: PropTypes.func.isRequired,
+  historyItems: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+      name: PropTypes.string.isRequired,
+    })
+  ).isRequired,
+  setHistoryItem: PropTypes.func.isRequired,
+  isSearching: PropTypes.bool.isRequired,
+  setIsSearching: PropTypes.func.isRequired,
+};
+
 const mapStateToProps = (state) => ({
-  searchInput: state.app.searchInput,
   results: state.app.results,
   historyItems: state.app.historyItems,
   isSearching: state.app.isSearching,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  setSearchInput: (value) => dispatch(appActions.setSearchInput(value)),
   setResults: (value) => dispatch(appActions.setResults(value)),
   setHistoryItem: (value) => dispatch(appActions.setHistoryItem(value)),
   setIsSearching: (value) => dispatch(appActions.setIsSearching(value)),
