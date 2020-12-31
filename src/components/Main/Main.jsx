@@ -8,8 +8,6 @@ import useDebounce from "../customHook/useDebounce";
 import { fetchRepos } from "../../services/api";
 
 const Main = ({
-  searchInput,
-  setSearchInput,
   results,
   setResults,
   historyItems,
@@ -17,17 +15,26 @@ const Main = ({
   isSearching,
   setIsSearching,
 }) => {
-  //   const [searchInput, setSearchInput] = useState('');
+  const [searchInput, setSearchInput] = useState("");
   //   const [historyItems, setHistoryItem] = useState([]);
   //   const [results, setResults] = useState([]);
   //   const [isSearching, setIsSearching] = useState(false);
+
+  const useDebounce = (fn, delay) => {
+    let timer;
+
+    return function (...params) {
+      clearTimeout(timer);
+      timer = setTimeout(fn, delay, ...params);
+    };
+  };
 
   function handleChange({ target }) {
     const { value } = target;
     setSearchInput(value);
   }
 
-  const debouncedSearchTerm = useDebounce(searchInput, 500);
+  const debouncedHandler = useDebounce(handleChange, 3000);
 
   useEffect(() => {
     const itemHistory = JSON.parse(localStorage.getItem("historyItems"));
@@ -38,15 +45,15 @@ const Main = ({
   }, []);
 
   useEffect(() => {
-    if (debouncedSearchTerm) {
+    if (searchInput) {
       setHistoryItem([
-        { id: shortid.generate(), name: debouncedSearchTerm },
+        { id: shortid.generate(), name: searchInput },
         ...historyItems,
       ]);
 
       setIsSearching(true);
 
-      fetchRepos(debouncedSearchTerm).then(({ data }) => {
+      fetchRepos(searchInput).then(({ data }) => {
         setIsSearching(false);
 
         console.log(data.items[0]);
@@ -55,7 +62,7 @@ const Main = ({
     } else {
       setResults([]);
     }
-  }, [debouncedSearchTerm]);
+  }, [searchInput]);
 
   useEffect(() => {
     if (historyItems) {
@@ -65,10 +72,10 @@ const Main = ({
 
   return (
     <main className="main">
-      <div>
+      <div className="main__input-block">
         <input
           className="main__input"
-          onChange={handleChange}
+          onChange={debouncedHandler}
           type="text"
           placeholder="Type to find"
         />
@@ -88,7 +95,7 @@ const Main = ({
           )}
         </div>
       </div>
-      <ul className="main__list">
+      <ul className="main__list lists">
         {isSearching ? (
           <li>loading ...</li>
         ) : (
