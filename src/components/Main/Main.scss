@@ -47,9 +47,15 @@
 @media (min-width: 768px) {
   .main {
     display: flex;
+    flex-direction: row;
 
     &__input-block {
-      width: 20%;
+      flex-basis: 20%;
+      flex-shrink: 0;
+    }
+
+    &__list {
+      flex-grow: 1;
     }
   }
 

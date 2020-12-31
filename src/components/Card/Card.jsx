@@ -19,8 +19,7 @@ const Card = ({ result: { name, description, language } }) => {
         }}
         onClick={() => setOpenValue(!isOpen)}
       >
-        Description:
-        <span>{description}</span>
+        Description: <span>{description}</span>
       </p>
     </li>
   );
