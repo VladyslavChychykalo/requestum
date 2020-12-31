@@ -34,7 +34,7 @@ const Main = ({
     setSearchInput(value);
   }
 
-  const debouncedHandler = useDebounce(handleChange, 3000);
+  const debouncedHandler = useDebounce(handleChange, 1000);
 
   useEffect(() => {
     const itemHistory = JSON.parse(localStorage.getItem("historyItems"));
