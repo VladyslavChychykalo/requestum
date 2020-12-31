@@ -4,8 +4,8 @@ import "./Main.scss";
 import { connect } from "react-redux";
 import * as appActions from "../../redux/actions/appActions";
 import shortid from "shortid";
-import useDebounce from "../customHook/useDebounce";
 import { fetchRepos } from "../../services/api";
+import Loader from "../shared/Loader/Loader";
 
 const Main = ({
   results,
@@ -56,7 +56,6 @@ const Main = ({
       fetchRepos(searchInput).then(({ data }) => {
         setIsSearching(false);
 
-        console.log(data.items[0]);
         setResults(data.items);
       });
     } else {
@@ -97,9 +96,17 @@ const Main = ({
       </div>
       <ul className="main__list lists">
         {isSearching ? (
-          <li>loading ...</li>
+          <li className="loader">
+            <Loader />
+          </li>
         ) : (
-          results.map((result) => <Card key={result.id} result={result} />)
+          <>
+            {!results.length ? (
+              <li className="loader">No results</li>
+            ) : (
+              results.map((result) => <Card key={result.id} result={result} />)
+            )}
+          </>
         )}
       </ul>
     </main>
